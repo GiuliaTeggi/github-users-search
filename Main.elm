@@ -35,7 +35,7 @@ initModel =
     { username = "GiuliaTeggi"
     , user = User "" "" 0
     , error = False
-    , recent = []
+    , recent = [ "sineang01", "eadeheamingway", "helenzhou6" ]
     }
 
 
@@ -43,6 +43,7 @@ type Msg
     = UserData (Result Http.Error User)
     | Username String
     | FetchUser
+    | SearchRecentUser String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -63,6 +64,9 @@ update msg model =
 
         Username username ->
             ( { model | username = username }, Cmd.none )
+
+        SearchRecentUser recent ->
+            ( { model | username = recent }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -93,16 +97,16 @@ view model =
         ]
 
 
-renderRecent : String -> Html msg
+renderRecent : String -> Html Msg
 renderRecent recent =
-    p [ class "orange courier pa2" ] [ text recent ]
+    a [ href "", class "orange courier pa2 link underline-hover" ] [ text recent ]
 
 
 getRequest : String -> Request User
 getRequest username =
     let
         url =
-            "http://api.github.com/users/" ++ username ++ "?access_token=912a384245955abedf0a1fdea1f372928084fd6a"
+            "http://api.github.com/users/" ++ username ++ "?access_token=8c16592e3fe66652c170d086ad734e8847106f0b"
     in
         Http.get url userDecoder
 
