@@ -106,7 +106,7 @@ getRequest : String -> Request User
 getRequest username =
     let
         url =
-            "https://api.github.com/users/" ++ username ++ "?access_token=8c16592e3fe66652c170d086ad734e8847106f0b"
+            "https://api.github.com/users/" ++ username ++ "?access_token=490dadc91b226a7b6dfbe024bc6a1c7a8a183fdb"
     in
         Http.get url userDecoder
 
