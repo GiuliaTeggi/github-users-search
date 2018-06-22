@@ -66,7 +66,7 @@ update msg model =
             ( { model | username = user }, Cmd.none )
 
         SearchRecentUser recent ->
-            ( { model | username = recent }, Cmd.none )
+            ( { model | username = recent }, sendHttpRequest model.username )
 
 
 view : Model -> Html Msg
@@ -99,14 +99,14 @@ view model =
 
 renderRecent : String -> Html Msg
 renderRecent recent =
-    p [ class "orange courier pa2 link underline-hover pointer", onClick (Username recent) ] [ text recent ]
+    p [ class "orange courier pa2 link underline-hover pointer", onClick (SearchRecentUser recent) ] [ text recent ]
 
 
 getRequest : String -> Request User
 getRequest username =
     let
         url =
-            "http://api.github.com/users/" ++ username
+            "https://api.github.com/users/" ++ username
     in
         Http.get url userDecoder
 
