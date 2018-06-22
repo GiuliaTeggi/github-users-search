@@ -99,7 +99,7 @@ view model =
 
 renderRecent : String -> Html Msg
 renderRecent recent =
-    p [ class "orange courier pa2 link underline-hover", onClick (Username recent) ] [ text recent ]
+    p [ class "orange courier pa2 link underline-hover pointer", onClick (Username recent) ] [ text recent ]
 
 
 getRequest : String -> Request User
