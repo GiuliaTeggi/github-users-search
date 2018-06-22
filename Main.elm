@@ -62,8 +62,8 @@ update msg model =
         UserData (Err err) ->
             ( { model | error = True }, Cmd.none )
 
-        Username username ->
-            ( { model | username = username }, Cmd.none )
+        Username user ->
+            ( { model | username = user }, Cmd.none )
 
         SearchRecentUser recent ->
             ( { model | username = recent }, Cmd.none )
@@ -99,7 +99,7 @@ view model =
 
 renderRecent : String -> Html Msg
 renderRecent recent =
-    a [ href "", class "orange courier pa2 link underline-hover" ] [ text recent ]
+    p [ class "orange courier pa2 link underline-hover", onClick (Username recent) ] [ text recent ]
 
 
 getRequest : String -> Request User

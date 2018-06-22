@@ -1,0 +1,22 @@
+{
+  "name": "github-users-search",
+  "version": "1.0.0",
+  "description": "An app to search github users by username",
+  "main": "elm.js",
+  "scripts": {
+    "build": "elm-make Main.elm --output=elm.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GiuliaTeggi/github-users-search.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GiuliaTeggi/github-users-search/issues"
+  },
+  "homepage": "https://github.com/GiuliaTeggi/github-users-search#readme",
+  "dependencies": {
+    "elm": "^0.18.0"
+  }
+}
