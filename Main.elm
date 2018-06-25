@@ -66,10 +66,10 @@ update msg model =
             ( model, sendHttpRequest model.username )
 
         UserData (Ok user) ->
-            let
-                log =
-                    Debug.log "This is the user data:" user
-            in
+            -- add username to model.recent list only if it isn't already in the list
+            if List.member user.login model.recent then
+                ( { model | user = user, error = False }, Cmd.none )
+            else
                 ( { model | user = user, error = False, recent = user.login :: model.recent }, Cmd.none )
 
         UserData (Err err) ->
@@ -79,10 +79,10 @@ update msg model =
             ( { model | username = user }, Cmd.none )
 
         SearchRecentUser recent ->
-            -- add username to model.recent list only if it isn't already in the list
-            if List.member recent model.recent then
-                ( model, sendHttpRequest model.username )
-            else
+            let
+                log =
+                    Debug.log "Recent" recent
+            in
                 ( { model | username = recent }, sendHttpRequest model.username )
 
 
@@ -99,17 +99,17 @@ view model =
             , button [ class "ma1 courier", onClick FetchUser ] [ text "Search" ]
             ]
         , section []
-            [ if model.error then
-                div [] [ text "Sorry, the search failed. Please try again." ]
-              else
-                section [ class "bg-light-gray flex flex-column items-center ma4" ]
-                    [ img [ src model.user.avatar_url, class "w5 br-100 ma4 ba b--orange bw2" ] []
-                    , a [ href (String.append "http://github.com/" model.user.login), class "link underline-hover orange courier pa0" ] [ text model.user.login ]
-                    , div [ class "flex flex-row" ]
-                        [ h4 [ class "pa0 courier" ] [ text "Followers: " ]
-                        , h4 [ class "pa0 courier" ] [ text (toString model.user.followers) ]
-                        ]
+            [ section [ class "bg-light-gray flex flex-column items-center ma4" ]
+                [ if model.error then
+                    div [] [ text "Sorry, the search failed. Please try again." ]
+                  else
+                    img [ src model.user.avatar_url, class "w5 br-100 ma4 ba b--orange bw2" ] []
+                , a [ href (String.append "http://github.com/" model.user.login), class "link underline-hover orange courier pa0" ] [ text model.user.login ]
+                , div [ class "flex flex-row" ]
+                    [ h4 [ class "pa0 courier" ] [ text "Followers: " ]
+                    , h4 [ class "pa0 courier" ] [ text (toString model.user.followers) ]
                     ]
+                ]
             ]
         , section [ class "flex flex-row items-center" ]
             [ h3 [ class "courier" ] [ text "Recent searches" ]
@@ -169,4 +169,8 @@ userDecoder =
 
 sendHttpRequest : String -> Cmd Msg
 sendHttpRequest username =
-    Http.send UserData <| getRequest username
+    let
+        log =
+            Debug.log "send http request reached" username
+    in
+        Http.send UserData <| getRequest username
