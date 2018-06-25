@@ -7,8 +7,12 @@ import Http exposing (..)
 import Json.Decode as Json
 
 
+-- Initialising app
+
+
 main : Program Never Model Msg
 main =
+    -- A program describes how the app works
     program
         { init = init
         , update = update
@@ -19,7 +23,12 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
+    -- use initModel as initial model and send an http request as initial command
     ( initModel, sendHttpRequest initModel.username )
+
+
+
+-- MODEL
 
 
 type alias Model =
@@ -37,6 +46,10 @@ initModel =
     , error = False
     , recent = [ "sineang01", "eadeheamingway", "helenzhou6" ]
     }
+
+
+
+-- UPDATE
 
 
 type Msg
@@ -66,7 +79,15 @@ update msg model =
             ( { model | username = user }, Cmd.none )
 
         SearchRecentUser recent ->
-            ( { model | username = recent }, sendHttpRequest model.username )
+            -- add username to model.recent list only if it isn't already in the list
+            if List.member recent model.recent then
+                ( model, sendHttpRequest model.username )
+            else
+                ( { model | username = recent }, sendHttpRequest model.username )
+
+
+
+-- VIEW
 
 
 view : Model -> Html Msg
@@ -97,9 +118,17 @@ view model =
         ]
 
 
+
+-- Render list of recently searched users (model.recent)
+
+
 renderRecent : String -> Html Msg
 renderRecent recent =
     p [ class "orange courier pa2 link underline-hover pointer", onClick (SearchRecentUser recent) ] [ text recent ]
+
+
+
+-- Build http GET request
 
 
 getRequest : String -> Request User
@@ -111,6 +140,10 @@ getRequest username =
         Http.get url userDecoder
 
 
+
+-- Type alias of result of http request
+
+
 type alias User =
     { login : String
     , avatar_url : String
@@ -119,7 +152,7 @@ type alias User =
 
 
 
--- Json Decoder is a decoder of type User (if type wasn't known it would be Decoder a)
+-- Decode JSON object returned from http request using User type alias
 
 
 userDecoder : Json.Decoder User
@@ -128,6 +161,10 @@ userDecoder =
         (Json.field "login" Json.string)
         (Json.field "avatar_url" Json.string)
         (Json.field "followers" Json.int)
+
+
+
+-- Send http request
 
 
 sendHttpRequest : String -> Cmd Msg
